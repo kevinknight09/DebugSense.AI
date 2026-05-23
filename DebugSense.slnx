@@ -1,12 +1,24 @@
 <Solution>
   <Folder Name="/src/" />
+  <Folder Name="/src/Api/">
+    <Project Path="src/Api/DebugSense.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Application/">
+    <Project Path="src/Application/DebugSense.Application.csproj" />
+  </Folder>
   <Folder Name="/src/DataFetcher/">
     <Project Path="src/DataFetcher/DebugSense.DataFetcher.csproj" />
   </Folder>
   <Folder Name="/src/Embedding/">
     <Project Path="src/Embedding/DebugSense.Embedding.csproj" />
   </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="src/Infrastructure/DebugSense.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/Parsers/">
     <Project Path="src/Parsers/DebugSense.Parsers.csproj" />
+  </Folder>
+  <Folder Name="/src/Retrieval/">
+    <Project Path="src/Retrieval/DebugSense.Retrieval.csproj" />
   </Folder>
 </Solution>
