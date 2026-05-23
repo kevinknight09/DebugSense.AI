@@ -483,4 +483,5 @@ $RECYCLE.BIN/
 
 # Custom Ignores
 qdrant_data/
+ollama_data/
 data/

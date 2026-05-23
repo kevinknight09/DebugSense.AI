@@ -21,4 +21,7 @@
   <Folder Name="/src/Retrieval/">
     <Project Path="src/Retrieval/DebugSense.Retrieval.csproj" />
   </Folder>
+  <Folder Name="/src/DataIngestor/">
+    <Project Path="src/DataIngestor/DebugSense.DataIngestor.csproj" />
+  </Folder>
 </Solution>
