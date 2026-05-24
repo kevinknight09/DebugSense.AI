@@ -33,7 +33,7 @@ public class SemanticSearchService
     public async Task<List<SearchResult>> SearchAsync(string queryText, ulong limit = 3)
     {
         // 1. Convert text to vector
-        var queryVector = await _embeddingService.GenerateEmbeddingAsync(queryText);
+        var queryVector = await _embeddingService.GenerateEmbeddingAsync(queryText, isQuery: true);
 
         if (queryVector == null || queryVector.Length == 0)
         {
