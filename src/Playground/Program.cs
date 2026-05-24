@@ -38,12 +38,19 @@ class Program
 
             Console.WriteLine("\n[Searching vector database & Generating Answer...]\n");
             
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            var answer = await orchestrator.AnswerQuestionAsync(query);
-            stopwatch.Stop();
+            //var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            //var answer = await orchestrator.AnswerQuestionAsync(query);
+            //stopwatch.Stop();
 
             Console.WriteLine("================ AI RESPONSE ================");
-            Console.WriteLine(answer);
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            // Loop over the stream as the AI generates it
+            await foreach (var token in orchestrator.AnswerQuestionStreamAsync(query))
+            {
+                // Use Write (not WriteLine) to print words side-by-side
+                Console.Write(token);
+            }
+            stopwatch.Stop();
             Console.WriteLine("=============================================\n");
             Console.WriteLine($"[Metrics] Time taken: {stopwatch.ElapsedMilliseconds} ms ({stopwatch.Elapsed.TotalSeconds:F2} seconds)\n");
         }
