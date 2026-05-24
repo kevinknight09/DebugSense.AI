@@ -3,23 +3,26 @@
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=c-sharp&logoColor=white)
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-black?style=for-the-badge&logo=ollama)
 
 DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented Generation (RAG) to help developers diagnose software issues. By retrieving relevant debugging discussions, documentation, and solutions from a curated StackOverflow dataset, it generates highly grounded and context-aware answers to exception messages, stack traces, and error logs.
 
-## 🚀 Core Features (In Progress)
-- **Semantic Search**: Understands the meaning of error messages, not just keyword matches.
-- **Hybrid Retrieval**: Combines BM25 keyword search with Vector similarity to find precise answers.
-- **Local AI Orchestration**: Uses Ollama for running embedding models and LLMs locally.
-- **Grounded Responses**: Provides source citations from StackOverflow to reduce AI hallucinations.
+## 🚀 Core Features
+- **Data Ingestion Pipeline**: Automatically downloads and cleans C# StackOverflow threads.
+- **Smart Chunking**: Separates conversational text from HTML `<pre>` code blocks for precise embedding.
+- **Semantic Search**: Understands the meaning of error messages using the `nomic-embed-text` model.
+- **Local AI Orchestration**: Uses Ollama with `phi3` or `llama3` for running entirely offline, private, and free LLM generations.
+- **Hardware Optimized**: Supports direct GPU passthrough to Docker containers for blazing-fast inference on Windows.
+- **Interactive Playground**: A built-in terminal CLI to chat with your codebase errors.
 
 ## 🏗️ Architecture
-1. **Data Ingestion**: Fetches top C# exception questions from the StackExchange API.
-2. **Chunking & Parsing**: Intelligently splits problem descriptions, stack traces, and accepted answers into chunks.
-3. **Embeddings**: Converts text chunks into vector representations using local Ollama models.
-4. **Vector Database**: Stores embeddings and metadata (framework, exception type) in Qdrant for fast semantic search.
+1. **Data Ingestion**: `DataFetcher` pulls data, `DocumentParser` cleans it, and `DataIngestor` orchestrates the pipeline.
+2. **Embeddings**: Converts text chunks into 768-dimensional mathematical vectors. Applies `search_document:` and `search_query:` prefixes for maximum Nomic model accuracy.
+3. **Vector Database**: Stores embeddings in a local Qdrant container for high-speed HNSW Cosine Similarity search.
+4. **Generation (RAG)**: The `RagOrchestratorService` extracts the top K chunks and prompts `phi3` to synthesize a tutoring-style answer.
 
 ## 🛠️ Technology Stack
-- **Backend Core**: ASP.NET Core / C#
+- **Backend Core**: ASP.NET Core 10.0 / C#
 - **Embeddings & LLM**: Ollama (Local)
 - **Vector Database**: Qdrant
 - **Deployment**: Docker Compose
@@ -30,16 +33,19 @@ DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented
   /DataFetcher        # Fetches StackOverflow data via StackExchange API
   /Parsers            # Splits documents and logs into intelligent chunks
   /Embedding          # Interfaces with Ollama for generating vector embeddings
-  /Infrastructure     # Integrates with Qdrant Vector DB
-  /Retrieval          # (Upcoming) Executes hybrid queries and reranking
+  /Infrastructure     # Integrates with Qdrant Vector DB & Ollama Chat
+  /Retrieval          # Orchestrates hybrid queries and RAG generation
+  /DataIngestor       # Console app that builds the vector database
+  /Playground         # Interactive CLI to test the RAG engine
   /Api                # (Upcoming) Exposes backend endpoints for frontend
 ```
 
 ## ⚙️ Getting Started
 
 ### Prerequisites
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
-- [Docker](https://www.docker.com/products/docker-desktop) and Docker Compose
+- [.NET SDK](https://dotnet.microsoft.com/download)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- *Optional but highly recommended: NVIDIA GPU for fast AI generation.*
 
 ### 1. Start Infrastructure Services
 The project uses Docker to host Qdrant (Vector DB) and Ollama (Local AI). Start these services in the background:
@@ -48,23 +54,45 @@ The project uses Docker to host Qdrant (Vector DB) and Ollama (Local AI). Start 
 cd docker
 docker compose up -d
 ```
+*Note: If you have an NVIDIA GPU, the docker-compose file is already pre-configured to pass your GPU directly into Ollama for maximum speed.*
 
-*Note: Qdrant will run on ports `6333` and `6334`, and Ollama will run on port `11434`.*
+### 2. Pull Required AI Models
+You will need to pull the specific local models we use into Ollama:
+```powershell
+docker compose exec ollama ollama pull nomic-embed-text
+docker compose exec ollama ollama pull phi3
+```
 
-### 2. Fetch Sample Dataset
-Run the data fetcher to download a sample of top C# exception questions from StackOverflow:
-
+### 3. Fetch and Ingest Data
+Run the fetcher to download the dataset, and the ingestor to embed it into the database:
 ```powershell
 cd ../src/DataFetcher
 dotnet run
+
+cd ../DataIngestor
+dotnet run
 ```
-This will create a `sample_dataset.json` file in the `data/` directory.
+*This will vectorize the StackOverflow dataset and upload it to Qdrant.*
+
+### 4. Talk to the AI
+Run the Playground to open an interactive chat terminal:
+```powershell
+cd ../Playground
+dotnet run
+```
+Type your exception (e.g. `Null reference object not set to an instance`), and the AI will scan the vector database and generate an expert response!
 
 ## 🗺️ Roadmap
-- **Phase 1 (MVP)**: Implement end-to-end ingestion, basic vector retrieval, and simple LLM generation.
-- **Phase 2**: Add Hybrid Search (BM25 + Vector) and metadata filtering.
-- **Phase 3**: Introduce query rewriting, error fingerprinting, and framework-aware context.
-- **Phase 4**: Develop a rich frontend (Angular) with streaming responses (SignalR).
+- ✅ **Phase 1**: Implement end-to-end ingestion and infrastructure.
+- ✅ **Phase 2**: Vector similarity search (Retrieval Layer).
+- ✅ **Phase 3**: RAG Orchestrator and Local LLM Generation.
+- ⏳ **Phase 4**: Add Hybrid Search (BM25 + Vector) and metadata filtering.
+- ⏳ **Phase 5**: Develop a rich frontend (Angular/React) with streaming responses (SignalR).
+
+## 📁 Documentation
+Check the `/Documents` directory for deep-dive architecture notes:
+- `RetrievalProcess.md`: Detailed breakdown of the Semantic Search math and workflow.
+- `PerformanceBottlenecks.md`: Enterprise-scale solutions for VRAM overflow and Model Thrashing.
 
 ## 🛡️ License
 This project is open-source. Please see the LICENSE file for details.
