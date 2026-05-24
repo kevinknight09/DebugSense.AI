@@ -77,6 +77,27 @@ public class QdrantVectorStore
         }
     }
 
+    /// <summary>
+    /// Searches the Qdrant collection for the vectors most similar to the given query vector.
+    /// </summary>
+    public async Task<IReadOnlyList<ScoredPoint>> SearchAsync(float[] queryVector, ulong limit = 5)
+    {
+        var searchParams = new SearchParams
+        {
+            Exact = false,
+            HnswEf = 128
+        };
+
+        var results = await _client.SearchAsync(
+            CollectionName,
+            queryVector,
+            limit: limit,
+            searchParams: searchParams
+        );
+
+        return results;
+    }
+
     private Guid GenerateDeterministicGuid(string input)
     {
         using (var md5 = System.Security.Cryptography.MD5.Create())

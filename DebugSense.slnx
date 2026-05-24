@@ -24,4 +24,7 @@
   <Folder Name="/src/DataIngestor/">
     <Project Path="src/DataIngestor/DebugSense.DataIngestor.csproj" />
   </Folder>
+  <Folder Name="/src/Playground/">
+    <Project Path="src/Playground/DebugSense.Playground.csproj" />
+  </Folder>
 </Solution>

@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Application\DebugSense.Application.csproj" />
     <ProjectReference Include="..\Infrastructure\DebugSense.Infrastructure.csproj" />
+    <ProjectReference Include="..\Embedding\DebugSense.Embedding.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
