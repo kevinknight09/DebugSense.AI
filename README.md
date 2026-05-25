@@ -37,7 +37,8 @@ DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented
   /Retrieval          # Orchestrates hybrid queries and RAG generation
   /DataIngestor       # Console app that builds the vector database
   /Playground         # Interactive CLI to test the RAG engine
-  /Api                # (Upcoming) Exposes backend endpoints for frontend
+  /Api                # ASP.NET Core Web API with Server-Sent Events (SSE)
+  /UI                 # Dark-mode Angular SPA web frontend
 ```
 
 ## ⚙️ Getting Started
@@ -82,12 +83,26 @@ dotnet run
 ```
 Type your exception (e.g. `Null reference object not set to an instance`), and the AI will scan the vector database and generate an expert response!
 
+### 5. Launch the Enterprise Web Application
+To experience the RAG engine in a sleek, dark-mode browser interface with live streaming:
+1. Open a terminal and start the ASP.NET Core API:
+```powershell
+cd src/Api
+dotnet run
+```
+2. Open a second terminal and start the Angular frontend:
+```powershell
+cd src/UI
+npm start
+```
+Open `http://localhost:4200` in your browser to start chatting!
+
 ## 🗺️ Roadmap
 - ✅ **Phase 1**: Implement end-to-end ingestion and infrastructure.
 - ✅ **Phase 2**: Vector similarity search (Retrieval Layer).
 - ✅ **Phase 3**: RAG Orchestrator and Local LLM Generation.
 - ⏳ **Phase 4**: Add Hybrid Search (BM25 + Vector) and metadata filtering.
-- ⏳ **Phase 5**: Develop a rich frontend (Angular/React) with streaming responses (SignalR).
+- ✅ **Phase 5**: Developed a rich web frontend (Angular) and API with live SSE streaming.
 
 ## 📁 Documentation
 Check the `/Documents` directory for deep-dive architecture notes:
