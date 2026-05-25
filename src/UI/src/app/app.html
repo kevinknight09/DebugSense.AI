@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>DebugSense AI 🧠</h1>
+  <p class="subtitle">Enterprise RAG Powered by Ollama & Angular</p>
+
+  <textarea 
+    [(ngModel)]="query" 
+    placeholder="Paste your C# exception or error here..."
+    [disabled]="isGenerating">
+  </textarea>
+  <br>
+  
+  <button (click)="sendQuery()" [disabled]="isGenerating || !query">
+    {{ isGenerating ? 'Thinking...' : 'Ask AI' }}
+  </button>
+
+  <div class="response-box" *ngIf="responseContent || isGenerating">
+    <div class="typing-indicator" *ngIf="isGenerating && !responseContent">
+      Scanning Qdrant Vector Database...
+    </div>
+    <!-- We use pre-wrap so newlines from the LLM render correctly -->
+    <div class="content" style="white-space: pre-wrap;">{{ responseContent }}</div>
+  </div>
+</div>

@@ -11,8 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\DebugSense.Application.csproj" />
+    <ProjectReference Include="..\Retrieval\DebugSense.Retrieval.csproj" />
     <ProjectReference Include="..\Infrastructure\DebugSense.Infrastructure.csproj" />
+    <ProjectReference Include="..\Embedding\DebugSense.Embedding.csproj" />
   </ItemGroup>
 
 </Project>

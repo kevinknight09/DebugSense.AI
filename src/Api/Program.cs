@@ -1,8 +1,36 @@
+using DebugSense.Embedding;
+using DebugSense.Infrastructure;
+using DebugSense.Retrieval;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Register our custom RAG Engine Services
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<OllamaEmbeddingService>(sp =>
+    new OllamaEmbeddingService(sp.GetRequiredService<HttpClient>(), "nomic-embed-text"));
+builder.Services.AddSingleton<QdrantVectorStore>(sp =>
+    new QdrantVectorStore("localhost", 6334));
+builder.Services.AddSingleton<SemanticSearchService>();
+builder.Services.AddSingleton<OllamaChatService>(sp =>
+    new OllamaChatService(sp.GetRequiredService<HttpClient>(), "phi3"));
+builder.Services.AddSingleton<RagOrchestratorService>();
+
+// 1. Add CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // Angular default port
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -12,30 +40,13 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Removed because it breaks local Angular HTTP requests
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// 2. Enable CORS
+app.UseCors("AllowAngular");
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
