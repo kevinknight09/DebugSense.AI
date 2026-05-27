@@ -1,4 +1,4 @@
-# DebugSense AI: 100% Private Offline RAG System, Made using by .NET & Ollama
+# DebugSense AI: 100% Private Offline RAG System, Made using .NET | Ollama | Angular
 
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=c-sharp&logoColor=white)
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
@@ -9,9 +9,12 @@
 DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented Generation (RAG) to help developers diagnose software issues. By retrieving relevant debugging discussions, documentation, and solutions from a curated StackOverflow dataset, it generates highly grounded and context-aware answers to exception messages, stack traces, and error logs.
 
 <p align="center">
-  <img src="./assets/UI_Demo_BeforeResponse.png" width="48%" alt="UI Before Response" />
-  <img src="./assets/UI_Demo_AfterResponse.png" width="48%" alt="UI After Response" />
+  <video src="./assets/Final_Demo.mp4" width="100%" controls></video>
+  <br>
+  <em>*Note: This demonstration video has been sped up for presentation purposes. The original implementation has longer model-load times depending on hardware.*</em>
 </p>
+
+  <img src="./assets/UI_Demo_AfterResponse.png" width="100%" alt="UI After Response" />
 
 ## 🚀 Core Features
 - **Data Ingestion Pipeline**: Automatically downloads and cleans C# StackOverflow threads.
@@ -26,6 +29,7 @@ DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented
 2. **Embeddings**: Converts text chunks into 768-dimensional mathematical vectors. Applies `search_document:` and `search_query:` prefixes for maximum Nomic model accuracy.
 3. **Vector Database**: Stores embeddings in a local Qdrant container for high-speed HNSW Cosine Similarity search.
 4. **Generation (RAG)**: The `RagOrchestratorService` extracts the top K chunks and prompts `phi3` to synthesize a tutoring-style answer.
+5. **Presentation (UI)**: A modern Angular SPA frontend connects to the C# API and streams the LLM response in real-time via Server-Sent Events (SSE).
 
 ```mermaid
 graph TD
@@ -41,7 +45,9 @@ graph TD
 ```
 
 ## 🛠️ Technology Stack
-- **Backend Core**: ASP.NET Core 10.0 / C#
+- **Frontend UI**: Angular (TypeScript)
+- **Backend API**: ASP.NET Core Web API (Server-Sent Events)
+- **Backend Core**: .NET 10.0 / C#
 - **Embeddings & LLM**: Ollama (Local)
 - **Vector Database**: Qdrant
 - **Deployment**: Docker Compose
@@ -65,6 +71,7 @@ graph TD
 
 ### Prerequisites
 - [.NET SDK](https://dotnet.microsoft.com/download)
+- [Node.js & npm](https://nodejs.org/) (Required for the Angular UI)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - *Optional but highly recommended: NVIDIA GPU for fast AI generation.*
 
@@ -121,13 +128,10 @@ Open `http://localhost:4200` in your browser to start chatting!
 - ✅ **Phase 1**: Implement end-to-end ingestion and infrastructure.
 - ✅ **Phase 2**: Vector similarity search (Retrieval Layer).
 - ✅ **Phase 3**: RAG Orchestrator and Local LLM Generation.
-- ⏳ **Phase 4**: Add Hybrid Search (BM25 + Vector) and metadata filtering.
-- ✅ **Phase 5**: Developed a rich web frontend (Angular) and API with live SSE streaming.
+- ✅ **Phase 4**: Developed a rich web frontend (Angular) and API with live SSE streaming.
+- ⏳ **Phase 5**: Add Hybrid Search (BM25 + Vector) and metadata filtering.
+- ⏳ **Phase 6**: Conversational Memory (PostgreSQL Chat History integration).
+- ⏳ **Phase 7**: Package the Angular application as an offline Desktop App using Electron.
 
-## 📁 Documentation
-Check the `/Documents` directory for deep-dive architecture notes:
-- `RetrievalProcess.md`: Detailed breakdown of the Semantic Search math and workflow.
-- `PerformanceBottlenecks.md`: Enterprise-scale solutions for VRAM overflow and Model Thrashing.
 
-## 🛡️ License
-This project is open-source. Please see the LICENSE file for details.
+

@@ -485,6 +485,7 @@ $RECYCLE.BIN/
 qdrant_data/
 ollama_data/
 data/
+/Documents/
 
 # --- Angular UI Specific Ignores ---
 src/UI/dist/
