@@ -9,9 +9,9 @@
 DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented Generation (RAG) to help developers diagnose software issues. By retrieving relevant debugging discussions, documentation, and solutions from a curated StackOverflow dataset, it generates highly grounded and context-aware answers to exception messages, stack traces, and error logs.
 
 <p align="center">
-  <video src="./assets/Final_Demo.mp4" width="100%" controls></video>
+  <img src="./assets/Final_Demo_GIF.gif" width="100%" alt="DebugSense AI Demo" />
   <br>
-  <em>*Note: This demonstration video has been sped up for presentation purposes. The original implementation has longer model-load times depending on hardware.*</em>
+  <em>*Note: This demonstration GIF has been sped up for presentation purposes. The original implementation has longer model-load times depending on hardware.*</em>
 </p>
 
   <img src="./assets/UI_Demo_AfterResponse.png" width="100%" alt="UI After Response" />
