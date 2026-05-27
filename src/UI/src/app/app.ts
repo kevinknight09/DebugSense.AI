@@ -13,6 +13,10 @@ export class App {
   query: string = '';
   responseContent: string = '';
   isGenerating: boolean = false;
+  
+  statusMessage: string = '';
+  elapsedSeconds: number = 0;
+  timerInterval: any;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -21,7 +25,19 @@ export class App {
 
     this.isGenerating = true;
     this.responseContent = '';
-    this.cdr.detectChanges(); // Force UI update to show 'Thinking...'
+    this.elapsedSeconds = 0;
+    this.statusMessage = 'Vectorizing query & searching Qdrant...';
+    
+    // Start a timer to update the user on what is happening behind the scenes
+    this.timerInterval = setInterval(() => {
+      this.elapsedSeconds++;
+      if (this.elapsedSeconds === 5) {
+        this.statusMessage = 'Loading massive LLM into GPU (this can take up to 30s)...';
+      }
+      this.cdr.detectChanges();
+    }, 1000);
+
+    this.cdr.detectChanges(); // Force UI update
 
     try {
       const response = await fetch('http://localhost:5170/api/chat', {
@@ -38,6 +54,13 @@ export class App {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+
+        // Clear the timer the moment we get the first token
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+          this.statusMessage = 'Generating response...';
+        }
 
         const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split('\n\n');
@@ -56,6 +79,10 @@ export class App {
       this.cdr.detectChanges();
     } finally {
       this.isGenerating = false;
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+      }
       this.cdr.detectChanges();
     }
   }

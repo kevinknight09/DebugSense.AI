@@ -15,7 +15,8 @@
 
   <div class="response-box" *ngIf="responseContent || isGenerating">
     <div class="typing-indicator" *ngIf="isGenerating && !responseContent">
-      Scanning Qdrant Vector Database...
+      {{ statusMessage }} 
+      <span *ngIf="elapsedSeconds > 0">({{ elapsedSeconds }}s)</span>
     </div>
     <!-- We use pre-wrap so newlines from the LLM render correctly -->
     <div class="content" style="white-space: pre-wrap;">{{ responseContent }}</div>
