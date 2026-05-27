@@ -1,4 +1,4 @@
-# DebugSense AI: StackOverflow RAG for Debugging
+# DebugSense AI: 100% Private Offline RAG System, Made using by .NET & Ollama
 
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=c-sharp&logoColor=white)
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
@@ -7,6 +7,11 @@
 ![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-black?style=for-the-badge&logo=ollama)
 
 DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented Generation (RAG) to help developers diagnose software issues. By retrieving relevant debugging discussions, documentation, and solutions from a curated StackOverflow dataset, it generates highly grounded and context-aware answers to exception messages, stack traces, and error logs.
+
+<p align="center">
+  <img src="./assets/UI_Demo_BeforeResponse.png" width="48%" alt="UI Before Response" />
+  <img src="./assets/UI_Demo_AfterResponse.png" width="48%" alt="UI After Response" />
+</p>
 
 ## 🚀 Core Features
 - **Data Ingestion Pipeline**: Automatically downloads and cleans C# StackOverflow threads.
@@ -22,6 +27,19 @@ DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented
 3. **Vector Database**: Stores embeddings in a local Qdrant container for high-speed HNSW Cosine Similarity search.
 4. **Generation (RAG)**: The `RagOrchestratorService` extracts the top K chunks and prompts `phi3` to synthesize a tutoring-style answer.
 
+```mermaid
+graph TD
+    UI[Angular Web UI] -->|SSE Stream| API(ASP.NET Core API)
+    API -->|Query| RAG{RagOrchestrator}
+    RAG -->|1. Vectorize Query| Embed[Ollama: nomic-embed-text]
+    Embed -->|768d Vector| RAG
+    RAG -->|2. Search| Qdrant[(Qdrant Vector DB)]
+    Qdrant -->|Top 3 Chunks| RAG
+    RAG -->|3. Prompt + Context| LLM[Ollama: phi3]
+    LLM -->|Streamed Tokens| RAG
+    RAG -->|Stream| API
+```
+
 ## 🛠️ Technology Stack
 - **Backend Core**: ASP.NET Core 10.0 / C#
 - **Embeddings & LLM**: Ollama (Local)
@@ -33,6 +51,7 @@ DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented
 /src
   /DataFetcher        # Fetches StackOverflow data via StackExchange API
   /Parsers            # Splits documents and logs into intelligent chunks
+  /Application        # Clean Architecture Core (Interfaces, DTOs, Use Cases)
   /Embedding          # Interfaces with Ollama for generating vector embeddings
   /Infrastructure     # Integrates with Qdrant Vector DB & Ollama Chat
   /Retrieval          # Orchestrates hybrid queries and RAG generation

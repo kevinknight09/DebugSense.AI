@@ -1,24 +1,29 @@
 <div class="container">
-  <h1>DebugSense AI 🧠</h1>
-  <p class="subtitle">Enterprise RAG Powered by Ollama & Angular</p>
+  <h1>DebugSense AI</h1>
+  <p class="subtitle">100% Private Offline RAG System, Powered by Ollama & .NET</p>
+  
+  <p class="description">
+    DebugSense AI is an intelligent, completely offline debugging assistant. Paste your stack traces, exceptions, or C# errors below. The RAG engine will instantly retrieve relevant solutions from a curated StackOverflow dataset and synthesize a precise, expert-level fix using local LLMs.
+  </p>
 
-  <textarea 
-    [(ngModel)]="query" 
-    placeholder="Paste your C# exception or error here..."
-    [disabled]="isGenerating">
+  <textarea [(ngModel)]="query" placeholder="Paste your C# exception or error here..." [disabled]="isGenerating">
   </textarea>
   <br>
-  
+
   <button (click)="sendQuery()" [disabled]="isGenerating || !query">
     {{ isGenerating ? 'Thinking...' : 'Ask AI' }}
   </button>
 
   <div class="response-box" *ngIf="responseContent || isGenerating">
     <div class="typing-indicator" *ngIf="isGenerating && !responseContent">
-      {{ statusMessage }} 
+      {{ statusMessage }}
       <span *ngIf="elapsedSeconds > 0">({{ elapsedSeconds }}s)</span>
     </div>
     <!-- We use pre-wrap so newlines from the LLM render correctly -->
     <div class="content" style="white-space: pre-wrap;">{{ responseContent }}</div>
+  </div>
+
+  <div class="footer">
+    Designed and Developed by Rounak Saha
   </div>
 </div>
