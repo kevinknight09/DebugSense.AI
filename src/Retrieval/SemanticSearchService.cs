@@ -41,7 +41,7 @@ public class SemanticSearchService
         }
 
         // 2. Perform vector search in Qdrant
-        var rawResults = await _vectorStore.SearchAsync(queryVector, limit);
+        var rawResults = await _vectorStore.SearchAsync(queryVector, rawKeywordText:queryText,  limit);
 
         // 3. Map Qdrant points to SearchResult DTOs
         var searchResults = rawResults.Select(r => new SearchResult

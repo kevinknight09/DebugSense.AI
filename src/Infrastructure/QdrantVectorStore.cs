@@ -39,6 +39,7 @@ public class QdrantVectorStore
         if (!exists)
         {
             await _client.CreateCollectionAsync(CollectionName, new VectorParams { Size = vectorSize, Distance = Distance.Cosine });
+            await _client.CreatePayloadIndexAsync(CollectionName, fieldName: "Content", schemaType: PayloadSchemaType.Text, indexParams: new PayloadIndexParams { TextIndexParams = new TextIndexParams { Tokenizer = TokenizerType.Word, Lowercase = true } });
             Console.WriteLine($"Created Qdrant collection: {CollectionName}");
         }
     }
@@ -80,7 +81,7 @@ public class QdrantVectorStore
     /// <summary>
     /// Searches the Qdrant collection for the vectors most similar to the given query vector.
     /// </summary>
-    public async Task<IReadOnlyList<ScoredPoint>> SearchAsync(float[] queryVector, ulong limit = 5)
+    public async Task<IReadOnlyList<ScoredPoint>> SearchAsync(float[] queryVector, string? rawKeywordText = null, ulong limit = 5)
     {
         var searchParams = new SearchParams
         {
@@ -88,9 +89,19 @@ public class QdrantVectorStore
             HnswEf = 128
         };
 
+        // Building the BM25 Filter
+        Filter filter = null;
+
+        if (!string.IsNullOrEmpty(rawKeywordText))
+        {
+            filter = new Filter();
+            filter.Must.Add(Conditions.MatchText("Content", rawKeywordText));
+        }
+
         var results = await _client.SearchAsync(
             CollectionName,
             queryVector,
+            filter: filter,
             limit: limit,
             searchParams: searchParams
         );
