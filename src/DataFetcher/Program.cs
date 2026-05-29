@@ -1,3 +1,4 @@
+using DebugSense.DataFetcher.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,41 +84,4 @@ class Program
 
         Console.WriteLine($"Dataset saved to {filePath}");
     }
-}
-
-public class StackExchangeResponse<T>
-{
-    public List<T> Items { get; set; } = new();
-}
-
-public class Question
-{
-    [JsonPropertyName("question_id")]
-    public int QuestionId { get; set; }
-    public string Title { get; set; } = "";
-    public string Body { get; set; } = "";
-    [JsonPropertyName("accepted_answer_id")]
-    public int AcceptedAnswerId { get; set; }
-    public List<string> Tags { get; set; } = new();
-    public int Score { get; set; }
-}
-
-public class Answer
-{
-    [JsonPropertyName("answer_id")]
-    public int AnswerId { get; set; }
-    public string Body { get; set; } = "";
-}
-
-public class DatasetItem
-{
-    public string Id { get; set; } = "";
-    public string Title { get; set; } = "";
-    public string Body { get; set; } = "";
-    [JsonPropertyName("accepted_answer")]
-    public string AcceptedAnswer { get; set; } = "";
-    public List<string> Tags { get; set; } = new();
-    public int Score { get; set; }
-    public string Framework { get; set; } = "";
-    public string Exception { get; set; } = "";
 }

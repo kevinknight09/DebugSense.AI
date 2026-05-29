@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using DebugSense.DataFetcher;
+using DebugSense.DataFetcher.Models;
 using DebugSense.Embedding;
 using DebugSense.Infrastructure;
 using DebugSense.Parsers;
