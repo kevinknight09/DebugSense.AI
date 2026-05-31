@@ -40,10 +40,15 @@ public class SemanticSearchService
             return new List<SearchResult>();
         }
 
-        // 2. Perform vector search in Qdrant
-        var rawResults = await _vectorStore.SearchAsync(queryVector, rawKeywordText:queryText,  limit);
+        // 2. Intelligent Keyword Extraction
+        // Extractor parses out specific C# exceptions/hex codes to pass into Qdrant's BM25 Filter.
+        // If it returns null, Qdrant executes a pure dense vector search automatically!
+        string? extractedKeywords = KeywordExtractor.Extract(queryText);
 
-        // 3. Map Qdrant points to SearchResult DTOs
+        // 3. Perform vector search in Qdrant with optional Hybrid filtering
+        var rawResults = await _vectorStore.SearchAsync(queryVector, rawKeywordText: extractedKeywords, limit);
+
+        // 4. Map Qdrant points to SearchResult DTOs
         var searchResults = rawResults.Select(r => new SearchResult
         {
             Score = r.Score,
