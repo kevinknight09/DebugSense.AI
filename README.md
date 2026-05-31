@@ -19,7 +19,7 @@ DebugSense AI is an AI-powered debugging assistant that uses Retrieval-Augmented
 ## 🚀 Core Features
 - **Data Ingestion Pipeline**: Automatically downloads and cleans C# StackOverflow threads.
 - **Smart Chunking**: Separates conversational text from HTML `<pre>` code blocks for precise embedding.
-- **Semantic Search**: Understands the meaning of error messages using the `nomic-embed-text` model.
+- **Hybrid Search**: Combines 768d Dense Vectors for semantic meaning with a BM25 Inverted Index and C# Regex Keyword Extractor for exact technical matching (e.g. `NullReferenceException`).
 - **Local AI Orchestration**: Uses Ollama with `phi3` or `llama3` for running entirely offline, private, and free LLM generations.
 - **Hardware Optimized**: Supports direct GPU passthrough to Docker containers for blazing-fast inference on Windows.
 - **Interactive Playground**: A built-in terminal CLI to chat with your codebase errors.
@@ -129,7 +129,7 @@ Open `http://localhost:4200` in your browser to start chatting!
 - ✅ **Phase 2**: Vector similarity search (Retrieval Layer).
 - ✅ **Phase 3**: RAG Orchestrator and Local LLM Generation.
 - ✅ **Phase 4**: Developed a rich web frontend (Angular) and API with live SSE streaming.
-- ⏳ **Phase 5**: Add Hybrid Search (BM25 + Vector) and metadata filtering.
+- ✅ **Phase 5**: Implemented true Hybrid Search (BM25 Payload Indexing + Vector) with an Intelligent Regex Keyword Extractor.
 - ⏳ **Phase 6**: Conversational Memory (PostgreSQL Chat History integration).
 - ⏳ **Phase 7**: Package the Angular application as an offline Desktop App using Electron.
 
